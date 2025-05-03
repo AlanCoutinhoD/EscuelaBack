@@ -1,0 +1,69 @@
+const pool = require('../config/database');
+
+class PaymentReceipt {
+    static async create(paymentData) {
+        const folio = `PAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        const [result] = await pool.query(
+            'INSERT INTO payment_receipts (folio, mes_pago, anio_pago, nota, abono, student_id, total) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [
+                folio,
+                paymentData.mes_pago,
+                paymentData.anio_pago,
+                paymentData.nota,
+                paymentData.abono,
+                paymentData.student_id,
+                paymentData.total
+            ]
+        );
+        return result;
+    }
+
+    static async searchReceipts(searchParams) {
+        let query = `
+            SELECT pr.*, s.nombre, s.apellido_paterno, s.apellido_materno 
+            FROM payment_receipts pr 
+            JOIN students s ON pr.student_id = s.id 
+            WHERE 1=1
+        `;
+        const values = [];
+
+        if (searchParams.folio) {
+            query += ' AND pr.folio LIKE ?';
+            values.push(`%${searchParams.folio}%`);
+        }
+        if (searchParams.mes_pago) {
+            query += ' AND pr.mes_pago = ?';
+            values.push(searchParams.mes_pago);
+        }
+        if (searchParams.anio_pago) {
+            query += ' AND pr.anio_pago = ?';
+            values.push(searchParams.anio_pago);
+        }
+        if (searchParams.student_id) {
+            query += ' AND pr.student_id = ?';
+            values.push(searchParams.student_id);
+        }
+        if (searchParams.nota) {
+            query += ' AND pr.nota LIKE ?';
+            values.push(`%${searchParams.nota}%`);
+        }
+        if (searchParams.abono) {
+            query += ' AND pr.abono = ?';
+            values.push(searchParams.abono);
+        }
+
+        const [rows] = await pool.query(query, values);
+        return rows;
+    }
+
+    static async getAll() {
+        const [rows] = await pool.query(`
+            SELECT pr.*, s.nombre, s.apellido_paterno, s.apellido_materno 
+            FROM payment_receipts pr 
+            JOIN students s ON pr.student_id = s.id
+        `);
+        return rows;
+    }
+}
+
+module.exports = PaymentReceipt;
