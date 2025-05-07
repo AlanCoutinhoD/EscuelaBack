@@ -3,25 +3,7 @@ const pool = require('../config/database');
 class Student {
     static async create(studentData) {
         const [result] = await pool.query(
-            'INSERT INTO students (nombre, apellido_materno, apellido_paterno, fecha_nacimiento, nivel_educativo, telefono, email, tutor, numero_telefonico_tutor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [
-                studentData.nombre,
-                studentData.apellido_materno,
-                studentData.apellido_paterno,
-                studentData.fecha_nacimiento,
-                studentData.nivel_educativo,
-                studentData.telefono,
-                studentData.email,
-                studentData.tutor,
-                studentData.numero_telefonico_tutor
-            ]
-        );
-        return result;
-    }
-
-    static async update(id, studentData) {
-        const [result] = await pool.query(
-            'UPDATE students SET nombre = ?, apellido_materno = ?, apellido_paterno = ?, fecha_nacimiento = ?, nivel_educativo = ?, telefono = ?, email = ?, tutor = ?, numero_telefonico_tutor = ? WHERE id = ?',
+            'INSERT INTO students (nombre, apellido_materno, apellido_paterno, fecha_nacimiento, nivel_educativo, telefono, email, tutor, numero_telefonico_tutor, dia_pago, monto_mensual) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 studentData.nombre,
                 studentData.apellido_materno,
@@ -32,6 +14,28 @@ class Student {
                 studentData.email,
                 studentData.tutor,
                 studentData.numero_telefonico_tutor,
+                studentData.dia_pago,
+                studentData.monto_mensual
+            ]
+        );
+        return result;
+    }
+
+    static async update(id, studentData) {
+        const [result] = await pool.query(
+            'UPDATE students SET nombre = ?, apellido_materno = ?, apellido_paterno = ?, fecha_nacimiento = ?, nivel_educativo = ?, telefono = ?, email = ?, tutor = ?, numero_telefonico_tutor = ?, dia_pago = ?, monto_mensual = ? WHERE id = ?',
+            [
+                studentData.nombre,
+                studentData.apellido_materno,
+                studentData.apellido_paterno,
+                studentData.fecha_nacimiento,
+                studentData.nivel_educativo,
+                studentData.telefono,
+                studentData.email,
+                studentData.tutor,
+                studentData.numero_telefonico_tutor,
+                studentData.dia_pago,
+                studentData.monto_mensual,
                 id
             ]
         );
@@ -75,6 +79,10 @@ class Student {
         if (searchParams.email) {
             query += ' AND email LIKE ?';
             values.push(`%${searchParams.email}%`);
+        }
+        if (searchParams.dia_pago) {
+            query += ' AND dia_pago = ?';
+            values.push(searchParams.dia_pago);
         }
 
         const [rows] = await pool.query(query, values);

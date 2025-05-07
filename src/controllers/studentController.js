@@ -2,9 +2,7 @@ const Student = require('../models/studentModel');
 
 class StudentController {
     static async create(req, res) {
-        console.log(req.body); // Add this line to debug
         try {
-            // Check if user has required role
             if (req.user.role !== 'admin' && req.user.role !== 'user') {
                 return res.status(403).json({ error: 'Unauthorized: Insufficient permissions' });
             }
@@ -18,11 +16,13 @@ class StudentController {
                 telefono: req.body.telefono,
                 email: req.body.email,
                 tutor: req.body.tutor,
-                numero_telefonico_tutor: req.body.numero_telefonico_tutor
+                numero_telefonico_tutor: req.body.numero_telefonico_tutor,
+                dia_pago: req.body.dia_pago,
+                monto_mensual: req.body.monto_mensual
             };
 
-            await Student.create(studentData);
-            res.status(201).json({ message: 'Student created successfully' });
+            const result = await Student.create(studentData);
+            res.status(201).json({ message: 'Student created successfully', id: result.insertId });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -30,7 +30,6 @@ class StudentController {
 
     static async getAllStudents(req, res) {
         try {
-            // Check if user has required role
             if (req.user.role !== 'admin' && req.user.role !== 'user') {
                 return res.status(403).json({ error: 'Unauthorized: Insufficient permissions' });
             }
@@ -48,7 +47,7 @@ class StudentController {
                 return res.status(403).json({ error: 'Unauthorized: Insufficient permissions' });
             }
 
-            const { id } = req.params;
+            const id = req.params.id;
             const studentData = {
                 nombre: req.body.nombre,
                 apellido_materno: req.body.apellido_materno,
@@ -58,15 +57,12 @@ class StudentController {
                 telefono: req.body.telefono,
                 email: req.body.email,
                 tutor: req.body.tutor,
-                numero_telefonico_tutor: req.body.numero_telefonico_tutor
+                numero_telefonico_tutor: req.body.numero_telefonico_tutor,
+                dia_pago: req.body.dia_pago,
+                monto_mensual: req.body.monto_mensual
             };
 
-            const result = await Student.update(id, studentData);
-            
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Student not found' });
-            }
-
+            await Student.update(id, studentData);
             res.json({ message: 'Student updated successfully' });
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -103,7 +99,8 @@ class StudentController {
                 apellido_paterno: req.query.apellido_paterno,
                 apellido_materno: req.query.apellido_materno,
                 nivel_educativo: req.query.nivel_educativo,
-                email: req.query.email
+                email: req.query.email,
+                dia_pago: req.query.dia_pago
             };
 
             const students = await Student.searchStudents(searchParams);
