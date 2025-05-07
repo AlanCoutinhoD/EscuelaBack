@@ -20,36 +20,32 @@ class PaymentReceipt {
 
     static async searchReceipts(searchParams) {
         let query = `
-            SELECT pr.*, s.nombre, s.apellido_paterno, s.apellido_materno 
-            FROM payment_receipts pr 
-            JOIN students s ON pr.student_id = s.id 
+            SELECT p.*, s.nombre, s.apellido_paterno, s.apellido_materno, s.nivel_educativo 
+            FROM payment_receipts p 
+            JOIN students s ON p.student_id = s.id 
             WHERE 1=1
         `;
         const values = [];
 
         if (searchParams.folio) {
-            query += ' AND pr.folio LIKE ?';
+            query += ' AND p.folio LIKE ?';
             values.push(`%${searchParams.folio}%`);
         }
         if (searchParams.mes_pago) {
-            query += ' AND pr.mes_pago = ?';
+            query += ' AND p.mes_pago = ?';
             values.push(searchParams.mes_pago);
         }
         if (searchParams.anio_pago) {
-            query += ' AND pr.anio_pago = ?';
+            query += ' AND p.anio_pago = ?';
             values.push(searchParams.anio_pago);
         }
         if (searchParams.student_id) {
-            query += ' AND pr.student_id = ?';
+            query += ' AND p.student_id = ?';
             values.push(searchParams.student_id);
         }
-        if (searchParams.nota) {
-            query += ' AND pr.nota LIKE ?';
-            values.push(`%${searchParams.nota}%`);
-        }
-        if (searchParams.abono) {
-            query += ' AND pr.abono = ?';
-            values.push(searchParams.abono);
+        if (searchParams.nivel_educativo) {
+            query += ' AND s.nivel_educativo = ?';
+            values.push(searchParams.nivel_educativo);
         }
 
         const [rows] = await pool.query(query, values);

@@ -65,7 +65,8 @@ class PaymentReceiptController {
                 folio: req.query.folio,
                 mes_pago: req.query.mes_pago,
                 anio_pago: req.query.anio_pago,
-                student_id: req.query.student_id
+                student_id: req.query.student_id,
+                nivel_educativo: req.query.nivel_educativo
             };
 
             const receipts = await PaymentReceipt.searchReceipts(searchParams);
