@@ -7,5 +7,6 @@ router.post('/create', authMiddleware, PaymentReceiptController.create);
 router.get('/all', authMiddleware, PaymentReceiptController.getAllReceipts);
 router.get('/:id', authMiddleware, PaymentReceiptController.getReceiptById);
 router.get('/search', authMiddleware, PaymentReceiptController.searchReceipts);
+router.delete('/delete/:id', authMiddleware, PaymentReceiptController.deleteReceipt);
 
 module.exports = router;

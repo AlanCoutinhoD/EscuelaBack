@@ -60,6 +60,11 @@ class PaymentReceipt {
         `);
         return rows;
     }
+
+    static async delete(id) {
+        const [result] = await pool.query('DELETE FROM payment_receipts WHERE id = ?', [id]);
+        return result;
+    }
 }
 
 module.exports = PaymentReceipt;
