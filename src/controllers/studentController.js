@@ -16,9 +16,10 @@ class StudentController {
                 telefono: req.body.telefono,
                 email: req.body.email,
                 tutor: req.body.tutor,
-                numero_telefonico_tutor: req.body.numero_telefonico_tutor,
-                dia_pago: req.body.dia_pago,
-                monto_mensual: req.body.monto_mensual
+                numero_telefonico_tutor: req.body.numero_telefonico_tutor,                dia_pago: req.body.dia_pago,
+                monto_mensual: req.body.monto_mensual,
+                fecha_registro: req.body.fecha_registro,
+                hora_registro: req.body.hora_registro
             };
 
             const result = await Student.create(studentData);
@@ -59,7 +60,9 @@ class StudentController {
                 tutor: req.body.tutor,
                 numero_telefonico_tutor: req.body.numero_telefonico_tutor,
                 dia_pago: req.body.dia_pago,
-                monto_mensual: req.body.monto_mensual
+                monto_mensual: req.body.monto_mensual,
+                fecha_registro: req.body.fecha_registro,
+                hora_registro: req.body.hora_registro
             };
 
             await Student.update(id, studentData);

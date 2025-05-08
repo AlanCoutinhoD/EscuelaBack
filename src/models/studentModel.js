@@ -3,27 +3,7 @@ const pool = require('../config/database');
 class Student {
     static async create(studentData) {
         const [result] = await pool.query(
-            'INSERT INTO students (nombre, apellido_materno, apellido_paterno, fecha_nacimiento, nivel_educativo, telefono, email, tutor, numero_telefonico_tutor, dia_pago, monto_mensual) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [
-                studentData.nombre,
-                studentData.apellido_materno,
-                studentData.apellido_paterno,
-                studentData.fecha_nacimiento,
-                studentData.nivel_educativo,
-                studentData.telefono,
-                studentData.email,
-                studentData.tutor,
-                studentData.numero_telefonico_tutor,
-                studentData.dia_pago,
-                studentData.monto_mensual
-            ]
-        );
-        return result;
-    }
-
-    static async update(id, studentData) {
-        const [result] = await pool.query(
-            'UPDATE students SET nombre = ?, apellido_materno = ?, apellido_paterno = ?, fecha_nacimiento = ?, nivel_educativo = ?, telefono = ?, email = ?, tutor = ?, numero_telefonico_tutor = ?, dia_pago = ?, monto_mensual = ? WHERE id = ?',
+            'INSERT INTO students (nombre, apellido_materno, apellido_paterno, fecha_nacimiento, nivel_educativo, telefono, email, tutor, numero_telefonico_tutor, dia_pago, monto_mensual, fecha_registro, hora_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 studentData.nombre,
                 studentData.apellido_materno,
@@ -36,6 +16,30 @@ class Student {
                 studentData.numero_telefonico_tutor,
                 studentData.dia_pago,
                 studentData.monto_mensual,
+                studentData.fecha_registro,
+                studentData.hora_registro
+            ]
+        );
+        return result;
+    }
+
+    static async update(id, studentData) {
+        const [result] = await pool.query(
+            'UPDATE students SET nombre = ?, apellido_materno = ?, apellido_paterno = ?, fecha_nacimiento = ?, nivel_educativo = ?, telefono = ?, email = ?, tutor = ?, numero_telefonico_tutor = ?, dia_pago = ?, monto_mensual = ?, fecha_registro = ?, hora_registro = ? WHERE id = ?',
+            [
+                studentData.nombre,
+                studentData.apellido_materno,
+                studentData.apellido_paterno,
+                studentData.fecha_nacimiento,
+                studentData.nivel_educativo,
+                studentData.telefono,
+                studentData.email,
+                studentData.tutor,
+                studentData.numero_telefonico_tutor,
+                studentData.dia_pago,
+                studentData.monto_mensual,
+                studentData.fecha_registro,
+                studentData.hora_registro,
                 id
             ]
         );
