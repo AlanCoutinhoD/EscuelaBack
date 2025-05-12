@@ -55,6 +55,25 @@ class PaymentReceiptController {
         }
     }
 
+    static async getReceiptsByStudentAndYear(req, res) {
+        try {
+            if (req.user.role !== 'admin' && req.user.role !== 'user') {
+                return res.status(403).json({ error: 'Unauthorized: Insufficient permissions' });
+            }
+
+            const { studentId, year } = req.params;
+            
+            if (!studentId || !year) {
+                return res.status(400).json({ error: 'Se requiere el ID del estudiante y el año' });
+            }
+            
+            const receipts = await PaymentReceipt.getReceiptsByStudentAndYear(studentId, year);
+            res.json(receipts);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     static async searchReceipts(req, res) {
         try {
             if (req.user.role !== 'admin' && req.user.role !== 'user') {

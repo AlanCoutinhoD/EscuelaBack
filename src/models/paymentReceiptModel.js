@@ -61,6 +61,16 @@ class PaymentReceipt {
         return rows;
     }
 
+    static async getReceiptsByStudentAndYear(studentId, year) {
+        const [rows] = await pool.query(`
+            SELECT pr.*, s.nombre, s.apellido_paterno, s.apellido_materno 
+            FROM payment_receipts pr 
+            JOIN students s ON pr.student_id = s.id
+            WHERE pr.student_id = ? AND pr.anio_pago = ?
+        `, [studentId, year]);
+        return rows;
+    }
+
     static async delete(id) {
         const [result] = await pool.query('DELETE FROM payment_receipts WHERE id = ?', [id]);
         return result;
