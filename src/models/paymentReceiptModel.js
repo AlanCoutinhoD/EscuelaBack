@@ -54,9 +54,17 @@ class PaymentReceipt {
 
     static async getAll() {
         const [rows] = await pool.query(`
-            SELECT pr.*, s.nombre, s.apellido_paterno, s.apellido_materno 
+            SELECT 
+                pr.*,
+                s.nombre,
+                s.apellido_paterno,
+                s.apellido_materno,
+                s.nivel_educativo,
+                s.tutor,
+                s.numero_telefonico_tutor
             FROM payment_receipts pr 
             JOIN students s ON pr.student_id = s.id
+            ORDER BY pr.fecha_creacion DESC
         `);
         return rows;
     }
