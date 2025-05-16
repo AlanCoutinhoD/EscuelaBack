@@ -116,3 +116,48 @@ class PaymentReceiptController {
 }
 
 module.exports = PaymentReceiptController;
+
+
+const getReceiptsByStudentAndYear = async (req, res) => {
+    try {
+        const { studentId, year } = req.params;
+
+        const query = `
+            SELECT 
+                pr.*,
+                s.nombre AS student_name,
+                s.apellido_paterno,
+                s.apellido_materno,
+                s.nivel_educativo,
+                CONCAT(t.nombre, ' ', t.apellido_paterno, ' ', t.apellido_materno) AS tutor_nombre,
+                pr.fecha_creacion
+            FROM payment_receipts pr
+            INNER JOIN students s ON pr.student_id = s.id
+            LEFT JOIN tutors t ON s.tutor_id = t.id
+            WHERE pr.student_id = ? 
+            AND YEAR(pr.payment_date) = ?
+            ORDER BY pr.payment_date DESC`;
+
+        const [receipts] = await pool.query(query, [studentId, year]);
+
+        if (!receipts.length) {
+            return res.status(404).json({
+                success: false,
+                message: 'No se encontraron folios para este estudiante en el año especificado'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: receipts
+        });
+
+    } catch (error) {
+        console.error('Error al obtener los folios:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener los folios',
+            error: error.message
+        });
+    }
+};
