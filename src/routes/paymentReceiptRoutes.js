@@ -9,5 +9,6 @@ router.get('/:id', authMiddleware, PaymentReceiptController.getReceiptById);
 router.get('/search', authMiddleware, PaymentReceiptController.searchReceipts);
 router.delete('/delete/:id', authMiddleware, PaymentReceiptController.deleteReceipt);
 router.get('/student/:studentId/year/:year', authMiddleware, PaymentReceiptController.getReceiptsByStudentAndYear);
+router.put('/update/:id', authMiddleware, PaymentReceiptController.updateReceipt);
 
 module.exports = router;
