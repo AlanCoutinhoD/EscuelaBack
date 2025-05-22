@@ -113,6 +113,25 @@ class PaymentReceiptController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    static async updateReceipt(req, res) {
+        try {
+            if (req.user.role !== 'admin' && req.user.role !== 'user') {
+                return res.status(403).json({ error: 'Unauthorized: Insufficient permissions' });
+            }
+
+            const { id } = req.params;
+            const result = await PaymentReceipt.update(id, req.body);
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Receipt not found' });
+            }
+
+            res.json({ message: 'Receipt updated successfully' });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 module.exports = PaymentReceiptController;

@@ -91,6 +91,21 @@ class PaymentReceipt {
         const [result] = await pool.query('DELETE FROM payment_receipts WHERE id = ?', [id]);
         return result;
     }
+
+    static async update(id, paymentData) {
+        const [result] = await pool.query(
+            'UPDATE payment_receipts SET mes_pago = ?, anio_pago = ?, nota = ?, abono = ?, total = ? WHERE id = ?',
+            [
+                paymentData.mes_pago,
+                paymentData.anio_pago,
+                paymentData.nota,
+                paymentData.abono,
+                paymentData.total,
+                id
+            ]
+        );
+        return result;
+    }
 }
 
 module.exports = PaymentReceipt;
